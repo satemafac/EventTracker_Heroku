@@ -1,0 +1,52 @@
+{% if user.is_authenticated %}
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container-fluid">
+      <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+      <span class="navbar-toggler-icon"></span>
+    </button> -->
+
+    <a class="navbar-brand" href="/host/event/home/">
+      <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/logo_white.png" width="30" height="30" alt="logo">
+      Event+
+    </a>
+    <!-- <div class="collapse navbar-collapse justify-content-end" id="navmenu" > -->
+      <div class="btn-group">
+  
+        <a aria-haspopup="true" aria-expand='false' role="button" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static">
+        <img src="{{auth0_user.extra_data.picture}}" alt="image" width="50" class="rounded-circle">
+        </a>
+        <!-- </button> -->
+        <!--
+        <a href="#" id="imageDropdown" data-toggle="dropdown">
+          <img src="https://picsum.photos/50">
+        </a> -->
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-end dropdown-menu-right">
+          <li><button onclick="location.href='/host/event/home/'" class="dropdown-item" type="button">Home</button></li>
+          <li><button onclick="location.href='/host/event/profile'" class="dropdown-item" type="button">Profile</button></li>
+          <li><button class="dropdown-item" type="button">Something else here</button></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><button onclick="location.href='{% url 'logout' %}'" class="dropdown-item" type="button">Log Out</button></li>
+        </ul>
+      </div>
+    <!-- </div> -->
+  </div>
+</nav>
+{% else %}
+    <nav class="navbar navbar-light" style="background-color: #f8f5f2;">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link active justify-content-start {% if active == 'Home' %} nav-link active {% endif %}" aria-current="page" href="#">Home</a>
+              </li>
+        </ul>
+          <div class="navbar justify-content-end">
+            <ul class=nav>
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" style="color: #078080;" href="/host/login/auth0">Log In</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% if active == 'Sign Up' %} nav-link active {% endif %}" href="#" style="color: #078080;">Sign Up</a>
+              </li>
+            </ul>
+          </div>
+      </nav>
+{% endif %}

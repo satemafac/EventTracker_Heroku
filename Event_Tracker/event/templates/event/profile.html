@@ -1,0 +1,6 @@
+{% extends 'event/base.html' %}
+{% block title %}Event Profile{% endblock %}
+{% block content %}
+{% include "event/navbar.html" with active='Home' %}
+{{user_data}}
+{% endblock %}

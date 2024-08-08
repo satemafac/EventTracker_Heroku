@@ -1,0 +1,313 @@
+{% extends 'event/base.html' %}
+{% load static %}
+{% block title %}Event Home{% endblock %}
+
+{% block content %}
+    <nav class="navbar navbar-dark">
+        <div class="container-fluid">
+            <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+            <span class="navbar-toggler-icon"></span>
+        </button> -->
+    
+        <a class="navbar-brand" style="color: black" href="/host/event/man_event/">
+        <img src="{% static "event/media/chevron-left-8x.png" %}" width="30" height="30" alt="logo">
+        Go Back
+        </a>
+        </div>
+    </nav>
+    {% for events in event %}
+    <h1> Update Evnet </h1>
+    {{ events.event.event_location }}
+
+        <!-- multistep form -->
+    <form id="msform" action="{% url 'update_event_form' events.id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- progressbar -->
+        <ul id="progressbar">
+        <li class="active">Event Info</li>
+        <li>Host Info</li>
+        <li>Socials Info</li>
+        </ul>
+        <!-- fieldsets -->
+        <div id="fieldset-wrapper">
+        <fieldset>
+            <h2 class="step-title">Create your Event</h2>
+            <br>
+            <input type="text" id="form_check" name="event_name" value="{{ events.event.event_name }}" required/>
+            <input type="text" name="event_location" value="{{ events.event.event_location }}" />
+            <input type="text" name="event_org" value="{{ events.event.event_org }}" />
+            <p>Event Image</p>
+            <input type="file" name="event_img" accept="image/gif, image/jpeg, image/png "/>
+            <textarea name="about_event" placeholder=" "> {{ events.event.about_event }} </textarea>
+            <p>Start Time *</p>
+            <input type="datetime-local" id="form_check" name="event_start_date" value="{{ events.event.event_start_date }}" required/>
+            <p>End Time *</p>
+            <input type="datetime-local" id="form_check" name="event_end_date" value="{{ events.event.event_end_date }}" required/>
+            <div class="button-wrapper">
+                <input type="button" name="next" class="next action-button" value="Next" />
+            </div>
+        </fieldset>
+        <fieldset>
+            <h2 class="step-title">Host Details</h2>
+            <br>
+            <input type="text" name="fname" value="{{ events.event.host.user_fname }}" />
+            <input type="text" name="lname" value="{{ events.event.host.user_lname }}" />
+            <input type="text" id="form_check" name="username" value="{{ events.event.host.username }}" required/>
+            <input type="number" id="form_check" name="phone" value="{{ events.social.phone }}" />
+            <input type="text" id="form_check" name="email" value="{{ events.social.email }}" required/>
+            <div class="button-wrapper">
+                <input type="button" name="previous" class="previous action-button" value="Previous" />
+                <input type="button" name="next" class="next action-button" value="Next" />
+            </div>
+            </fieldset>
+        <fieldset>
+            <h2 class="step-title">Socials</h2>
+            <br>
+            <input type="text" name="twitter" value="{{ events.social.twitter }}" />
+            <input type="text" name="instagram" value="{{ events.social.instagram }}" />
+            <input type="text" name="facebook" value="{{ events.social.Facebook }}" />
+            <textarea name="Bio" placeholder=" "> {{ events.social.user_bio }} </textarea>
+<<<<<<< HEAD
+            <div class="button-wrapper">
+                <input type="button" name="previous" class="previous action-button" value="Previous" />
+=======
+>>>>>>> origin/master
+                <input type="submit" id="save" name="submit" class="submit next action-button" value="Submit" />
+            </div>
+        </fieldset>
+        <div class="ripple-loader">
+            <div class="lds-ripple" style="display: none">
+            <div></div>
+            <div></div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    </form>
+
+
+
+
+
+    <script>
+        /**
+        * Multi-step form animations.
+        */
+        var current_fs, next_fs, previous_fs; // fieldsets
+        var left, opacity, scale; // fieldset properties which we will animate
+        var animating; // flag to prevent quick multi-click glitches
+        
+        /**
+        * On clicking "Next" button, animate to next fieldset.
+        */
+        jQuery(".button-wrapper .next").click(function () {
+            if (animating) {
+                return false;
+            }
+            animating = true;
+        
+            current_fs = jQuery(this).closest("fieldset");
+            next_fs = jQuery(this).closest("fieldset").next("fieldset");
+        
+            // activate next step on progressbar using the index of next_fs
+            jQuery("#progressbar li")
+                .eq(jQuery("fieldset").index(next_fs))
+                .addClass("active");
+        
+            // Scroll up to the progress bar.
+            scroll_to_progress_bar_top();
+        
+            // show the next fieldset
+            next_fs.show();
+        
+            // If there is no next_fs, means it's the last one, let's show the ripple animation.
+            if (!next_fs.length) {
+                setTimeout(function () {
+                    jQuery(".lds-ripple").show();
+                }, 600);
+            }
+        
+            // hide the current fieldset with style
+            current_fs.animate(
+                { opacity: 0 },
+                {
+                    step: function (now, mx) {
+                        // as the opacity of current_fs reduces to 0 - stored in "now"
+                        // 1. scale current_fs down to 80%
+                        scale = 1 - (1 - now) * 0.2;
+                        // 2. bring next_fs from the right(50%)
+                        left = now * 50 + "%";
+                        // 3. increase opacity of next_fs to 1 as it moves in
+                        opacity = 1 - now;
+                        current_fs.css({
+                            transform: "scale(" + scale + ")",
+                            position: "absolute"
+                        });
+                        next_fs.css({ left: left, opacity: opacity });
+                    },
+                    duration: 800,
+                    complete: function () {
+                        current_fs.hide();
+                        current_fs.css({ position: "relative" });
+                        next_fs.css({ position: "relative" });
+                        animating = false;
+                    },
+                    // this comes from the custom easing plugin
+                    easing: "easeInOutBack"
+                }
+            );
+        });
+        
+        /**
+        * On clicking "Previous" button, animate back to previous fieldset.
+        */
+        jQuery(".button-wrapper .previous").click(function () {
+            if (animating) {
+                return false;
+            }
+            animating = true;
+        
+            current_fs = jQuery(this).closest("fieldset");
+            previous_fs = jQuery(this).closest("fieldset").prev();
+        
+            // de-activate current step on progressbar
+            jQuery("#progressbar li")
+                .eq(jQuery("fieldset").index(current_fs))
+                .removeClass("active");
+        
+            // Scroll up to the progress bar.
+            scroll_to_progress_bar_top();
+        
+            // show the previous fieldset
+            previous_fs.show();
+            previous_fs.css({ position: "absolute" });
+        
+            // hide the current fieldset with style
+            current_fs.animate(
+                { opacity: 0 },
+                {
+                    step: function (now, mx) {
+                        // as the opacity of current_fs reduces to 0 - stored in "now"
+                        // 1. scale previous_fs from 80% to 100%
+                        scale = 0.8 + (1 - now) * 0.2;
+                        // 2. take current_fs to the right(50%) - from 0%
+                        left = (1 - now) * 50 + "%";
+                        // 3. increase opacity of previous_fs to 1 as it moves in
+                        opacity = 1 - now;
+                        current_fs.css({ left: left });
+                        previous_fs.css({ transform: "scale(" + scale + ")", opacity: opacity });
+                    },
+                    duration: 800,
+                    complete: function () {
+                        current_fs.hide();
+                        previous_fs
+                            .removeAttr("style")
+                            .css({ position: "relative", display: "block" });
+                        animating = false;
+                    },
+                    // this comes from the custom easing plugin
+                    easing: "easeInOutBack"
+                }
+            );
+        });
+        
+        /**
+        * Scroll to the top of the multi-step form. Needed for mobile.
+        */
+        function scroll_to_progress_bar_top() {
+            jQuery("html, body").animate(
+                {
+                    scrollTop: jQuery("#msform").offset().top - 40
+                },
+                1200,
+                "swing"
+            );
+        }
+        
+        /**
+        * Checks if all the fields within that field group have been filled out. If so, it enables the 'next' button.
+        * @param $field
+        */
+        function enable_or_disable_next_button($field) {
+        
+            var current_fs = jQuery($field).closest("fieldset"),
+                current_fs_inputs = current_fs.find("input, textarea").not(':input[type=button], :input[type=submit], :input[name$="_submit"], :input[name$="event_img"], :input[name$="fname"], :input[name$="lname"], :input[name$="phone"], :input[name$="twitter"], :input[name$="instagram"], :input[name$="facebook"], :input[name$="user_bio"], :input[name$="about_event"]'),
+                empty = false;
+        
+            current_fs_inputs.each(function () {
+                if (this.type === 'checkbox' || this.type === 'radio') {
+                    let checked = false;
+                    if (this.className) {
+                        checked = jQuery("#msform input." + this.className).is(":checked");
+                    } else {
+                        checked = jQuery('#msform input[name="' + this.name + '"]').is(":checked");
+                    }
+                    if (!checked) {
+                        empty = true;
+                        return false;
+                    }
+                } else {
+                    if (jQuery(this).val() == '') {
+                        empty = true;
+                        return false;
+                    }
+                }
+            });
+        
+            if (empty) {
+                current_fs.find('.next').attr('disabled', 'disabled'); // updated according to http://stackoverflow.com/questions/7637790/how-to-remove-disabled-attribute-with-jquery-ie
+            } else {
+                current_fs.find('.next').removeAttr('disabled'); // updated according to http://stackoverflow.com/questions/7637790/how-to-remove-disabled-attribute-with-jquery-ie
+            }
+        }
+        
+        // Setup list of fields that we want to use triggers for change events.
+        var inputfields = jQuery('#msform').find("input, textarea").not(':input[type=hidden], :input[type=button], :input[type=submit], :input[name$="_submit"]');
+        
+        // When the value of these fields changes, check if all the inputs in that fieldset have been filled out.
+        jQuery(inputfields).on("change keyup", function (event) {
+            enable_or_disable_next_button(event.target);
+        });
+        
+        // Run once on page load the enabling/disabling of the next buttons.
+        jQuery(inputfields).each(function () {
+            enable_or_disable_next_button(this);
+        });
+        
+        // ADDED TO STOP FORM SUBMISSION ON CODEPEN. REMOVE IN YOUR VERSION.
+        // jQuery(".submit").click(function () {
+        // 	event.preventDefault();
+        // });
+        // var somethingChanged=false;
+        // var setFormSubmitting = function() { formSubmitting = true; };
+        // 	$('#msform input').change(function() { 
+        // 		somethingChanged = true; 
+        // 	}); 
+        // 	$(window).bind('beforeunload', function(e){
+        // 		if(somethingChanged)
+        // 			return "You made some changes and it's not saved?";
+        // 		else 
+        // 			e=null; // i.e; if form state change show warning box, else don't show it.
+        // 	});
+        var submitted = false;
+        var userinput = false;
+        
+        $(document).ready(function() {
+        $("#msform").submit(function() {
+            submitted = true;
+        });
+        
+        $("#msform input").change(function() {
+            userinput = true;
+        });
+        
+        window.onbeforeunload = function () {
+            if (userinput && !submitted) {
+            return 'You do not have submitted the form yet.\
+            Do you really want to leave this page?';
+            }
+        }
+        });
+            
+        </script>
+{% endblock content %}

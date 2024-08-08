@@ -1,0 +1,13 @@
+{
+    "python.pythonPath": "home/mlamin1/Projects/Event_tracker/EventTracker/.venv/bin/python3",
+    "python.languageServer":"Pylance",
+    "files.associations": {
+        "**/*.html": "html",
+        "**/templates/**/*.html": "django-html",
+        "**/templates/**": "django-text",
+        "**/requirements{/**,*}.{txt,in}": "pip-requirements"
+    },
+    "emmet.includeLanguages": {"django-html": "html"}
+
+
+}
