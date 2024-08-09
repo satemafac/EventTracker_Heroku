@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-ue^+9e_v_tj^n#(dv_drkql+m$b*lp1&3(!0x6jar)*a)9#5!d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['event.sharetunez.me']
 
 
 # Application definition
