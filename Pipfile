@@ -15,6 +15,7 @@ flask = "*"
 django-decouple = "*"
 pillow = "*"
 django-phonenumber-field = "*"
+channels = "*"
 
 [dev-packages]
 
