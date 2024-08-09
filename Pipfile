@@ -16,6 +16,7 @@ django-decouple = "*"
 pillow = "*"
 django-phonenumber-field = "*"
 channels = "*"
+django-qr-code = "*"
 
 [dev-packages]
 
