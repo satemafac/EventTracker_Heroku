@@ -149,7 +149,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
-    '/Volumes/Developing/EventTracker/Event_Tracker/event/static',  # Absolute path to your static files
+    os.path.join(BASE_DIR, 'event/static'),
 ]
 MEDIA_ROOT = os.path.join(BASE_DIR,'media') #Media Upload folder
 
