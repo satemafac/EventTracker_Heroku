@@ -18,6 +18,7 @@ django-phonenumber-field = "*"
 channels = "*"
 django-qr-code = "*"
 shortuuid = "*"
+gunicorn = "*"
 
 [dev-packages]
 
