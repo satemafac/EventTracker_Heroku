@@ -1,6 +1,33 @@
 {% extends 'event/base.html' %}
+{% load static %}
 {% block title %}Event Index{% endblock %}
 {% block content %}
 {% include "event/navbar.html" with active='Home' %}
-<h2>Hello Wrrld</h2>
+
+<!-- <main style="height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 100px 20px; background: rgba(128, 128, 128, 0.7);">
+    <section class="hero">
+        <h1 style="font-size: 48px; color: #fff; margin-bottom: 20px;">Track Your Events with Ease</h1>
+        <p style="font-size: 18px; color: #ddd; margin-bottom: 40px;">Unlock valuable insights and optimize your events</p>
+        <div>
+            <a href="#" style="padding: 15px 30px; text-decoration: none; font-weight: bold; border-radius: 5px; background-color: #000; color: #fff; display: inline-block; margin: 0 10px;">Sign Up</a>
+            <a href="#" style="padding: 15px 30px; text-decoration: none; font-weight: bold; border-radius: 5px; background-color: #fff; color: #000; border: 2px solid #000; display: inline-block; margin: 0 10px;">Learn More</a>
+        </div>
+    </section>
+</main> -->
+
+<main style="position: relative; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 100px 20px;">
+    <!-- Blurred Background -->
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('{% static 'event/images/background.png' %}') no-repeat center center/cover; filter: blur(5px); z-index: -1;"></div>
+    
+    <!-- Content Over the Background -->
+    <section class="hero" style="position: relative; z-index: 1;">
+        <h1 style="font-size: 48px; color: #fff; margin-bottom: 20px;">Track Your Events with Ease</h1>
+        <p style="font-size: 18px; color: #ddd; margin-bottom: 40px;">Unlock valuable insights and optimize your events</p>
+        <div>
+            <a href="#" style="padding: 15px 30px; text-decoration: none; font-weight: bold; border-radius: 5px; background-color: #000; color: #fff; display: inline-block; margin: 0 10px;">Sign Up</a>
+            <a href="#" style="padding: 15px 30px; text-decoration: none; font-weight: bold; border-radius: 5px; background-color: #fff; color: #000; border: 2px solid #000; display: inline-block; margin: 0 10px;">Learn More</a>
+        </div>
+    </section>
+</main>
+
 {% endblock content %}

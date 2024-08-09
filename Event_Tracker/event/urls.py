@@ -14,11 +14,12 @@ router.register(r'todos', views.TodoView, 'todo')
 urlpatterns = [
     path('api/', include(router.urls)),
     path("", views.start_page, name = "start-page"),
+    path('', views.home_page, name="home-page"),
     path("event/home/", views.home_page, name="home-page"),
     path("home_save_form", views.home_save_form, name="home-save-form"),
     path("update_event_form/<event_idd>", views.update_event_form, name="update_event_form"),
     path("delete_event/<event_idd>", views.delete_event, name="delete_event"),
-    path("event/profile/", views.profile, name="profile"),
+    path("event/profile", views.profile, name="profile"),
     path("event/create/", views.create, name="create"),
     path("event_entree", views.event_entree, name="event_entree"),
     path("event/update_event/<event_idd>", views.update_event, name="update_event"),

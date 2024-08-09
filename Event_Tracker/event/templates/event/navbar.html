@@ -1,4 +1,4 @@
-{% if user.is_authenticated %}
+{% comment %} {% if user.is_authenticated %}
 <nav class="navbar navbar-dark bg-dark">
   <div class="container-fluid">
       <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
@@ -49,4 +49,100 @@
             </ul>
           </div>
       </nav>
+{% endif %} {% endcomment %}
+
+
+
+{% if user.is_authenticated %}
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+  <div class="container-fluid">
+    <!-- Logo on the left -->
+    <a class="navbar-brand" href="/host/event/home/">
+      <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/logo_white.png" width="30" height="30" alt="logo">
+      Event+
+    </a>
+
+    <!-- Navigation links in the center -->
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Track Events</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Pricing</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Features</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            More
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Authentication buttons on the right -->
+    <div class="btn-group">
+      <a aria-haspopup="true" aria-expanded='false' role="button" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static">
+        <img src="{{auth0_user.extra_data.picture}}" alt="image" width="50" class="rounded-circle">
+      </a>
+      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-lg-end dropdown-menu-right">
+        <li><button onclick="location.href='/host/event/home/'" class="dropdown-item" type="button">Home</button></li>
+        <li><button onclick="location.href='/host/event/profile'" class="dropdown-item" type="button">Profile</button></li>
+        <li><button class="dropdown-item" type="button">Something else here</button></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><button onclick="location.href='{% url 'logout' %}'" class="dropdown-item" type="button">Log Out</button></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+{% else %}
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+  <div class="container-fluid">
+    <!-- Logo on the left -->
+    <a class="navbar-brand" href="#">
+      <span style="font-weight: bold;">Logo</span>
+    </a>
+
+    <!-- Navigation links in the center -->
+    <div class="collapse navbar-collapse justify-content-center">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link {% if active == 'Home' %} active {% endif %}" aria-current="page" href="#">Track Events</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Pricing</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Features</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            More
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Sign Up and Log In buttons on the right -->
+    <div class="d-flex">
+      <a class="btn btn-outline-dark me-2" href="/host/login/auth0">Sign Up</a>
+      <a class="btn btn-dark" href="/host/login/auth0">Log In</a>
+    </div>
+  </div>
+</nav>
 {% endif %}
