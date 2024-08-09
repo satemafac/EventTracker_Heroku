@@ -20,6 +20,7 @@ django-qr-code = "*"
 shortuuid = "*"
 gunicorn = "*"
 tomlkit = "*"
+whisper = "*"
 
 [dev-packages]
 
