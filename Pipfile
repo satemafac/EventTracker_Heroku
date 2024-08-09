@@ -17,6 +17,7 @@ pillow = "*"
 django-phonenumber-field = "*"
 channels = "*"
 django-qr-code = "*"
+shortuuid = "*"
 
 [dev-packages]
 
