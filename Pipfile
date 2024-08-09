@@ -19,6 +19,7 @@ channels = "*"
 django-qr-code = "*"
 shortuuid = "*"
 gunicorn = "*"
+tomlkit = "*"
 
 [dev-packages]
 
