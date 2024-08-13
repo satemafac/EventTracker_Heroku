@@ -73,11 +73,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 #Whitelist React host
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
 ]
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 ROOT_URLCONF = 'Event_Tracker.urls'
 
@@ -148,7 +151,7 @@ USE_TZ = True
 STATIC_URL = '/staticfiles/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "event",
+    BASE_DIR / "event/static",
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media') #Media Upload folder
