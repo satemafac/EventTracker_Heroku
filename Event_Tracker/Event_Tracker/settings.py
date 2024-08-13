@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-ue^+9e_v_tj^n#(dv_drkql+m$b*lp1&3(!0x6jar)*a)9#5!d
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['event.sharetunez.me']
+ALLOWED_HOSTS = ['event.sharetunez.me','127.0.0.1']
 
 
 # Application definition
@@ -155,7 +155,7 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media') #Media Upload folder
 
-MEDIA_URL = '/media' # can make this whatever url to generate files urls
+MEDIA_URL = '/media/' # can make this whatever url to generate files urls
 
 
 # Default primary key field type
