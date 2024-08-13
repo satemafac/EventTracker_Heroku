@@ -149,7 +149,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'Event_Tracker'),
+    os.path.join(BASE_DIR, ''),
 ]
 MEDIA_ROOT = os.path.join(BASE_DIR,'media') #Media Upload folder
 
