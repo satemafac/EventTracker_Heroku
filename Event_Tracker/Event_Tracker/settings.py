@@ -148,12 +148,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
-    "/var/www/static/",
-    os.path.join(BASE_DIR, 'static'),
+    BASE_DIR / "event/static",
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media') #Media Upload folder
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/' # can make this whatever url to generate files urls
 
