@@ -21,6 +21,7 @@ shortuuid = "*"
 gunicorn = "*"
 tomlkit = "*"
 whisper = "*"
+whitenoise = "*"
 
 [dev-packages]
 
