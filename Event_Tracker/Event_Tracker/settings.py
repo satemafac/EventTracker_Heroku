@@ -155,7 +155,7 @@ STATICFILES_DIRS = [
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media') #Media Upload folder
 
-MEDIA_URL = '/' # can make this whatever url to generate files urls
+MEDIA_URL = '/media' # can make this whatever url to generate files urls
 
 
 # Default primary key field type
