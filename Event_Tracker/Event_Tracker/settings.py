@@ -169,9 +169,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #Auth Info
 # Eventtracker\settings.py
 SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
-SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-nrvj4wk4.us.auth0.com'
-SOCIAL_AUTH_AUTH0_KEY = 'nv0qZulilI6O7c5K3LAzOF6pZg7JeI7c'
-SOCIAL_AUTH_AUTH0_SECRET = 'D1mmMnVt-PTLiCJ98LYM5KRcnqo89vQaTfBtNnBUqkEJSgdnjeJQdYxWyGnuNKje'
+SOCIAL_AUTH_AUTH0_DOMAIN = 'dev-i24h8c02hqxkdod3.us.auth0.com'
+SOCIAL_AUTH_AUTH0_KEY = 'Qn1a6hYltuPliZU0QedcxnTkNiGQj1bs'
+SOCIAL_AUTH_AUTH0_SECRET = 'D1mmMnVt-sSqwHp5PyoPaneApgPEcFwJt1yRynpifJ4qOEbv0-mBreL4Jhy_RqSY_mgFQQToa'
 
 #Scope used by Auth0
 # Eventtracker\settings.py
