@@ -4556,6 +4556,28 @@ input[type="button"].btn-block {
   color: #fff;
 }
 
+.navbar-gradient {
+  background: linear-gradient(90deg, #4A90E2 0%, #3E8ED0 100%);
+  color: #FFFFFF; /* Make text white */
+}
+
+.navbar-gradient .nav-link {
+  color: #FFFFFF !important; /* Force nav links to be white */
+}
+
+.navbar-gradient .navbar-brand {
+  color: #FFFFFF !important; /* Force navbar brand text to be white */
+}
+
+.navbar-gradient .btn-outline-light {
+  color: #FFFFFF !important;
+  border-color: #FFFFFF !important;
+}
+
+.navbar-gradient .btn-light {
+  color: #000000 !important;
+}
+
 .card {
   position: relative;
   display: -ms-flexbox;
