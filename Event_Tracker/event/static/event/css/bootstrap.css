@@ -2401,6 +2401,30 @@ textarea.form-control {
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
+.btn-custom {
+  background-color: #EADBAC;
+  border-color: #EADBAC;
+  color: #000;
+}
+
+.btn-custom:hover {
+  background-color: #D39651; /* Adjust to a darker shade or your preferred hover color */
+  border-color: #D39651;
+  color: #fff; /* Adjust the text color on hover if needed */
+}
+
+.btn-custom-outline {
+  background-color: transparent;
+  border-color: #EADBAC;
+  color: #EADBAC;
+}
+
+.btn-custom-outline:hover {
+  background-color: #EADBAC;
+  color: #000; /* Adjust the text color on hover */
+}
+
+
 @media (prefers-reduced-motion: reduce) {
   .btn {
     transition: none;
@@ -4557,8 +4581,8 @@ input[type="button"].btn-block {
 }
 
 .navbar-gradient {
-  background: linear-gradient(90deg, #4A90E2 0%, #3E8ED0 100%);
-  color: #FFFFFF; /* Make text white */
+  background-color: #32364A !important;
+  color: #FFFFFF !important; /* Ensure text is white */
 }
 
 .navbar-gradient .nav-link {
@@ -4577,6 +4601,8 @@ input[type="button"].btn-block {
 .navbar-gradient .btn-light {
   color: #000000 !important;
 }
+
+
 
 .card {
   position: relative;

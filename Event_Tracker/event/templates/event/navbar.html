@@ -54,13 +54,12 @@
 
 {% load static %}
 {% if user.is_authenticated %}
-<nav class="navbar navbar-expand-lg navbar-gradient">
+<nav class="navbar navbar-expand-lg" style="background: linear-gradient(90deg, #4A90E2 0%, #3E8ED0 100%); color: #FFFFFF;">
   <div class="container-fluid">
     <!-- Logo on the left -->
-    <a class="navbar-brand" href="/host/event/home/">
-      <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/logo_white.png" width="30" height="30" alt="logo">
-      Event+
-    </a>
+    <a class="navbar-brand" href="#">
+      <img src="{% static 'event/images/eventp.png' %}" alt="Logo" style="width: 50px; height: auto; font-weight: bold;">
+    </a> 
 
     <!-- Navigation links in the center -->
     <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
@@ -140,9 +139,11 @@
 
     <!-- Sign Up and Log In buttons on the right -->
     <div class="d-flex">
-      <a class="btn btn-outline-dark me-2" href="/host/login/auth0">Sign Up</a>
-      <a class="btn btn-dark" href="/host/login/auth0">Log In</a>
+      <a class="btn btn-custom-outline me-2" style="margin-right: 10px;" href="/host/login/auth0">Sign Up</a>
+      <a class="btn btn-custom" href="/host/login/auth0">Log In</a>
     </div>
+    
+
   </div>
 </nav>
 {% endif %}
