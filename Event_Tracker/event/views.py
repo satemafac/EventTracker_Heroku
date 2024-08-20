@@ -391,7 +391,7 @@ def logout(request):
     domain=config('APP_DOMAIN')
     client_id=config('APP_CLIENT_ID')
     # return_to='http://127.0.0.1:8000/host/'
-    return_to='http://event.sharetunez.me/'
+    return_to='https://event.sharetunez.me/'
 
 
     return HttpResponseRedirect(f"https://{domain}/v2/logout?client_id={client_id}&returnTo={return_to}")
