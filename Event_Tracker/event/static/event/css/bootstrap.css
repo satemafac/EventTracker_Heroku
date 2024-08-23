@@ -60,14 +60,13 @@ body {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #212529;
+  color: #E0E0E0; /* Light text color for better contrast */
   text-align: left;
-  background-color: #fff;
+  background-color: #1F1B24; /* Dark background to complement the logo */
   height: 100%;
-  background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
+  background-image: linear-gradient(135deg, #2E2A3B, #1F1B24); /* Darker gradient with subtle contrast */
   background-repeat: no-repeat;
   background-attachment: fixed;
-  
 }
 
 [tabindex="-1"]:focus {
@@ -10176,15 +10175,20 @@ a.text-dark:hover, a.text-dark:focus {
   transition: 0.7s;
 }
 
-.solution_cards_box .solution_card:hover {
-  background: #309df0;
-  color: #fff;
-  transform: scale(1.1);
-  z-index: 9;
-}
-
-.solution_cards_box .solution_card:hover::before {
-  background: rgb(85 108 214 / 10%);
+.solution_cards_box .solution_card {
+  flex: 0 50%;
+  background: #2f2f2f; /* Changed to a darker metallic black shade */
+  background-image: linear-gradient(145deg, #3e3e3e, #1e1e1e); /* Adding a metallic effect */
+  box-shadow: 0 2px 4px 0 rgba(136, 144, 195, 0.2),
+    0 5px 15px 0 rgba(37, 44, 97, 0.15);
+  border-radius: 15px;
+  margin: 8px;
+  padding: 10px 15px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  min-height: 265px;
+  transition: 0.7s;
 }
 
 .solution_cards_box .solution_card:hover .solu_title h3,
@@ -10205,6 +10209,7 @@ a.text-dark:hover, a.text-dark:focus {
   border-radius: 35px;
 }
 
+
 .solution_cards_box .solution_card:hover .solu_description button {
   background: #fff !important;
   color: #309df0;
@@ -10214,7 +10219,7 @@ a.text-dark:hover, a.text-dark:focus {
 }*/
 
 .solution_card .solu_title h3 {
-  color: #212121;
+  color: #ffffff; /* Adjust text color for dark background */
   font-size: 1.3rem;
   margin-top: 13px;
   margin-bottom: 13px;
@@ -10223,23 +10228,24 @@ a.text-dark:hover, a.text-dark:focus {
 .solution_card .solu_description p {
   font-size: 15px;
   margin-bottom: 15px;
+  color: #d3d3d3; /* Lighten text color for better readability */
 }
 
 .solution_card .solu_description button {
   border: 0;
   border-radius: 15px;
-  background: linear-gradient(
-    140deg,
-    #42c3ca 0%,
-    #42c3ca 50%,
-    #42c3cac7 75%
-  ) !important;
-  color: #fff;
+  background: linear-gradient(140deg, #bfa15f 0%, #bfa15f 50%, #bfa15f 75%) !important;
+  color: #000000;
   font-weight: 500;
   font-size: 1rem;
   padding: 5px 16px;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
+.solution_card .solu_description button:hover {
+  background: linear-gradient(140deg, #000000 0%, #000000 50%, #bfa15f 75%) !important;
+  color: #bfa15f;
+}
 .our_solution_content h1 {
   text-transform: capitalize;
   margin-bottom: 1rem;
@@ -10568,6 +10574,13 @@ body {
     animation: animatedgradient 3s ease alternate infinite;
     background-size: 300% 300%;
   }
+
+
+.solution_card:hover {
+    background-color: #2f2f2f; /* Metallic black shade */
+    background-image: linear-gradient(145deg, #3e3e3e, #1e1e1e); /* Metallic effect */
+    transform: translateY(-10px); /* Subtle lift effect */
+}
   
   
   @keyframes animatedgradient {
