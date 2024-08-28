@@ -25,6 +25,18 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 import whisper
 import json
+import requests
+from django.views.decorators.csrf import csrf_exempt
+from dotenv import load_dotenv
+import os
+from openai import OpenAI
+
+
+load_dotenv()
+
+client = OpenAI(api_key=os.getenv('OPEN_AI_KEY'))
+ideogram_ai = os.getenv('IDEOGRAM_AI')
+
 
 # from Event_Tracker.event import serializers
 
@@ -32,6 +44,88 @@ DEBUG= config('DEBUG')
 # we write variable name we stored in .env inside quotes
 
 # Create your views here.
+
+# Set your OpenAI API key
+
+# Function to generate the flyer prompt using OpenAI's API
+def generate_flyer_prompt(event_name, location, organization, description, start_time, end_time):
+    # Create the base prompt
+    prompt = f"""
+    Give me a prompt to generate a beautiful and engaging flyer for this event.
+
+    Event Name: {event_name}
+    Location: {location}
+    Organization: {organization}
+    Description: {description}
+    Start Time: {start_time}
+    End Time: {end_time}
+
+    The flyer should have a modern and elegant design, matching the theme of the event, and should include the provided details in a clear and attractive manner.
+    """
+
+    # Call OpenAI API to get the prompt for flyer generation
+    response = client.chat.completions.create(
+        model="gpt-4",  # or use "gpt-3.5-turbo" depending on your preference
+        messages=[
+            {"role": "system", "content": "You are a creative assistant skilled in designing event flyers. Keep the prompts concise and to the point of creating an event flyer with no extra jargons."},
+            {"role": "user", "content": prompt},
+        ]
+    )
+
+    flyer_prompt = response.choices[0].message.content.strip()
+    print(flyer_prompt)
+
+    return flyer_prompt
+
+@csrf_exempt
+def generate_flyer(request):
+    if request.method == 'POST':
+        try:
+            # Extract data from the request
+            data = json.loads(request.body.decode('utf-8'))
+            event_name = data.get('event_name')
+            location = data.get('event_location')
+            organization = data.get('event_org')
+            description = data.get('about_event')
+            start_time = data.get('event_start_date')
+            end_time = data.get('event_end_date')
+
+            # Call the function to generate the flyer prompt
+            flyer_prompt = generate_flyer_prompt(event_name, location, organization, description, start_time, end_time)
+
+            # Call the Ideogram API to generate an image based on the flyer prompt
+            ideogram_api_url = "https://api.ideogram.ai/generate"
+            ideogram_payload = {
+                "image_request": {
+                    "model": "V_1",  # Replace with the appropriate model as per Ideogram's API docs
+                    "magic_prompt_option": "AUTO",
+                    "prompt": f"{flyer_prompt}"  # Ensure flyer_prompt is correctly added as a string
+                }
+            }
+
+            headers = {
+                "accept": "application/json",
+                "content-type": "application/json",
+                "Api-Key": f"{ideogram_ai}"  # Assuming the API uses Bearer token authentication
+            }
+
+            print(ideogram_payload)
+            print(headers)
+
+            ideogram_response = requests.post(ideogram_api_url, json=ideogram_payload, headers=headers)
+
+            if ideogram_response.status_code == 200:
+                image_data = ideogram_response.json()
+                # Return the image data or image URL as a JSON response
+                return JsonResponse({'flyer_prompt': flyer_prompt, 'image_data': image_data})
+            else:
+                return JsonResponse({'error': 'Failed to generate image with Ideogram API', 'details': ideogram_response.text}, status=500)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+
 def start_page(request):
     user = request.user
     if user.is_authenticated:
@@ -66,7 +160,7 @@ def home_page(request):
 
 
 def home_save_form(request):
-    
+
     user = request.user
 
     context = {}
@@ -146,7 +240,7 @@ def create(request):
 def man_event(request):
     user = request.user
     event_list = Event_Host.objects.select_related('host','social','event').filter(auth_user=user.id)
-    
+
     return render(request, "event/man_event.html", {'event_list': event_list})
 
 def event_entree(request, event_code = None):
@@ -284,7 +378,7 @@ class GetEvent(APIView):
                 data = RoomSerializer(room[0]).data
                 return Response(data, status=status.HTTP_200_OK)
             return Response({'Event Not Found': 'Invalid Event Code.'}, status=status.HTTP_404_NOT_FOUND)
-            
+
         return Response({'Bad Request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
 
 class RoomView(generics.ListAPIView):
@@ -297,7 +391,7 @@ class JoinEvent(APIView):
     def post(self, request, format=None):
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
-    
+
         code = request.data.get(self.lookup_url_kwarg)
         print(code)
         if code != None:
@@ -318,7 +412,7 @@ def delete_event(request, event_idd):
 
 def update_event_form(request, event_idd): 
     print(event_idd)
-    
+
     user = request.user
 
     context = {}
@@ -355,9 +449,9 @@ def update_event_form(request, event_idd):
         print(event_db[0].social_id)
 
 
-        
+
         # eventt = Event.objects.filter('host', 'event_social').update_or_create()
-        
+
         # Tweet.objects.filter(pk=1).update(tweet_id=mentions.meta.get("newest_id"))
         event_user=Event_Users.objects.filter(user_id=event_db[0].host_id).update(user_fname=user_fname, user_lname=user_lname,username=username)
         #Get pk from event_social
@@ -379,11 +473,11 @@ def update_event_form(request, event_idd):
 
 
 def update_event(request, event_idd):
-        
+
     # event = Event_Host.objects.get(pk=event_id)
     event = Event_Host.objects.select_related('host','social','event').filter(event_id=event_idd)
     return render(request, "event/update_event.html", {'event': event})
-    
+
 
 def logout(request):
     django_logout(request)

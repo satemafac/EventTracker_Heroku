@@ -36,13 +36,25 @@
 		<input type="text" id="form_check" name="event_name" placeholder="Envent Name *" required/>
 		<input type="text" name="event_location" placeholder="Location *" />
 		<input type="text" name="event_org" placeholder="Organization *" />
-		<p>Event Image</p>
+		<p>Event Banner Image</p>
 		<input type="file" name="event_img" accept="image/gif, image/jpeg, image/png "/>
 		<textarea name="about_event" placeholder="Describe Event..."></textarea>
-		<p>Start Time *</p>
-		<input type="datetime-local" id="form_check" name="event_start_date" placeholder="Start Time" required/>
-		<p>End Time *</p>
-		<input type="datetime-local" id="form_check" name="event_end_date" placeholder="End Time" required/>
+		<div class="time-fields">
+			<div class="time-field">
+			  <p>Start Time *</p>
+			  <input type="datetime-local" id="form_check" name="event_start_date" placeholder="Start Time" required/>
+			</div>
+			<div class="time-field">
+			  <p>End Time *</p>
+			  <input type="datetime-local" id="form_check" name="event_end_date" placeholder="End Time" required/>
+			</div>
+		  </div>
+		  <div class="button-wrapper">
+			<button type="button" class="generate-flyer-btn">Generate Flyer</button>
+		  </div>
+		  <div id="image-gallery" class="image-gallery">
+			<!-- Generated images will be appended here -->
+		  </div>
 		<div class="button-wrapper">
 			<input type="button" name="next" class="next action-button" value="Next" />
 		</div>
@@ -89,6 +101,121 @@
 var left, opacity, scale; // fieldset properties which we will animate
 var animating; // flag to prevent quick multi-click glitches
 
+function getCsrfToken() {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, 'csrftoken'.length + 1) === ('csrftoken=')) {
+                cookieValue = decodeURIComponent(cookie.substring('csrftoken'.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+/**
+ * Generate Flyer Button Functionality
+ */
+ jQuery(".generate-flyer-btn").click(function () {
+    var button = jQuery(this);
+    
+    // Add the loading class to the button
+    button.addClass('loading');
+
+    const eventName = jQuery('input[name="event_name"]').val();
+    const location = jQuery('input[name="event_location"]').val();
+    const organization = jQuery('input[name="event_org"]').val();
+    const description = jQuery('textarea[name="about_event"]').val();
+    const startTime = jQuery('input[name="event_start_date"]').val();
+    const endTime = jQuery('input[name="event_end_date"]').val();
+
+    // Perform an AJAX request to generate the flyer prompt
+    fetch('/generate-flyer/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCsrfToken()  // Use the getCsrfToken function here
+        },
+        body: JSON.stringify({
+            event_name: eventName,
+            event_location: location,
+            event_org: organization,
+            about_event: description,
+            event_start_date: startTime,
+            event_end_date: endTime
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Remove the loading class from the button
+        button.removeClass('loading');
+
+        if (data.image_data && data.image_data.data.length > 0) {
+            // Get the URL of the generated image
+            const imageUrl = data.image_data.data[0].url;
+
+            // Create a new image element
+            const imgElement = jQuery('<img />', {
+                src: imageUrl,
+                alt: 'Generated Flyer',
+                class: 'flyer-image'
+            });
+
+            // Append the image to the gallery
+            jQuery('#image-gallery').append(imgElement);
+
+            // Make the image clickable to expand in a modal
+            imgElement.click(function () {
+                openModal(imageUrl);
+            });
+        } else {
+            alert('No image generated.');
+        }
+    })
+    .catch(error => {
+        // Remove the loading class from the button in case of error
+        button.removeClass('loading');
+        console.error('Error generating flyer:', error);
+    });
+});
+
+/**
+ * Function to open the image in a modal for larger view
+ */
+function openModal(imageUrl) {
+    // Create the modal HTML structure
+    const modalHtml = `
+        <div class="modal" id="imageModal">
+            <span class="close" id="closeModal">&times;</span>
+            <img class="modal-content" id="modalImage" src="${imageUrl}">
+        </div>
+    `;
+
+    // Append the modal to the body
+    jQuery('body').append(modalHtml);
+
+    // Show the modal
+    jQuery('#imageModal').fadeIn();
+
+    // Close the modal when the close button is clicked
+    jQuery('#closeModal').click(function () {
+        jQuery('#imageModal').fadeOut(function () {
+            jQuery(this).remove();  // Remove the modal from the DOM
+        });
+    });
+
+    // Close the modal when clicking outside of the image
+    jQuery('#imageModal').click(function (event) {
+        if (event.target.id === 'imageModal') {
+            jQuery('#imageModal').fadeOut(function () {
+                jQuery(this).remove();  // Remove the modal from the DOM
+            });
+        }
+    });
+}
 /**
  * On clicking "Next" button, animate to next fieldset.
  */

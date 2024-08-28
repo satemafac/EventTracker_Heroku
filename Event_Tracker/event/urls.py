@@ -25,6 +25,7 @@ urlpatterns = [
     path("event/update_event/<event_idd>", views.update_event, name="update_event"),
     path("event_entree/<str:event_code>", views.event_entree, name="event_entree"),
     path("event/man_event/", views.man_event, name="man_event"),
+    path('generate-flyer/', views.generate_flyer, name='generate-flyer'),
     path("event/api/", RoomView.as_view()),
     path("join-event", JoinEvent.as_view()),
     path("get-event", GetEvent.as_view()),
