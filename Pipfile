@@ -22,6 +22,7 @@ gunicorn = "*"
 tomlkit = "*"
 whisper = "*"
 whitenoise = "*"
+openai = "*"
 
 [dev-packages]
 
