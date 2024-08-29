@@ -30,6 +30,9 @@ from django.views.decorators.csrf import csrf_exempt
 from dotenv import load_dotenv
 import os
 from openai import OpenAI
+from asgiref.sync import async_to_sync
+import asyncio
+import httpx
 
 
 load_dotenv()
@@ -47,9 +50,8 @@ DEBUG= config('DEBUG')
 
 # Set your OpenAI API key
 
-# Function to generate the flyer prompt using OpenAI's API
-def generate_flyer_prompt(event_name, location, organization, description, start_time, end_time):
-    # Create the base prompt
+# Function to generate the flyer prompt using OpenAI's API asynchronously
+async def generate_flyer_prompt(event_name, location, organization, description, start_time, end_time):
     prompt = f"""
     Give me a prompt to generate a beautiful and engaging flyer for this event.
 
@@ -63,25 +65,55 @@ def generate_flyer_prompt(event_name, location, organization, description, start
     The flyer should have a modern and elegant design, matching the theme of the event, and should include the provided details in a clear and attractive manner.
     """
 
-    # Call OpenAI API to get the prompt for flyer generation
-    response = client.chat.completions.create(
-        model="gpt-4",  # or use "gpt-3.5-turbo" depending on your preference
-        messages=[
-            {"role": "system", "content": "You are a creative assistant skilled in designing event flyers. Keep the prompts concise and to the point of creating an event flyer with no extra jargons."},
-            {"role": "user", "content": prompt},
-        ]
-    )
+    openai_api_key = os.getenv('OPEN_AI_KEY')
+    headers = {
+        "Authorization": f"Bearer {openai_api_key}",
+        "Content-Type": "application/json"
+    }
 
-    flyer_prompt = response.choices[0].message.content.strip()
-    print(flyer_prompt)
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            "https://api.openai.com/v1/chat/completions",
+            json={
+                "model": "gpt-4",
+                "messages": [
+                    {"role": "system", "content": "You are a creative assistant skilled in designing event flyers. Keep the prompts concise and to the point of creating an event flyer with no extra jargons."},
+                    {"role": "user", "content": prompt},
+                ]
+            },
+            headers=headers
+        )
 
+    flyer_prompt = response.json()["choices"][0]["message"]["content"].strip()
     return flyer_prompt
+
+# Function to call Ideogram API to generate an image asynchronously
+async def generate_ideogram_image(flyer_prompt):
+    ideogram_api_url = "https://api.ideogram.ai/generate"
+    ideogram_payload = {
+        "image_request": {
+            "model": "V_1",
+            "magic_prompt_option": "AUTO",
+            "prompt": flyer_prompt
+        }
+    }
+
+    ideogram_api_key = os.getenv('IDEOGRAM_AI')
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json",
+        "Api-Key": ideogram_api_key
+    }
+
+    async with httpx.AsyncClient() as client:
+        ideogram_response = await client.post(ideogram_api_url, json=ideogram_payload, headers=headers)
+
+    return ideogram_response
 
 @csrf_exempt
 def generate_flyer(request):
     if request.method == 'POST':
         try:
-            # Extract data from the request
             data = json.loads(request.body.decode('utf-8'))
             event_name = data.get('event_name')
             location = data.get('event_location')
@@ -90,33 +122,12 @@ def generate_flyer(request):
             start_time = data.get('event_start_date')
             end_time = data.get('event_end_date')
 
-            # Call the function to generate the flyer prompt
-            flyer_prompt = generate_flyer_prompt(event_name, location, organization, description, start_time, end_time)
-
-            # Call the Ideogram API to generate an image based on the flyer prompt
-            ideogram_api_url = "https://api.ideogram.ai/generate"
-            ideogram_payload = {
-                "image_request": {
-                    "model": "V_1",  # Replace with the appropriate model as per Ideogram's API docs
-                    "magic_prompt_option": "AUTO",
-                    "prompt": f"{flyer_prompt}"  # Ensure flyer_prompt is correctly added as a string
-                }
-            }
-
-            headers = {
-                "accept": "application/json",
-                "content-type": "application/json",
-                "Api-Key": f"{ideogram_ai}"  # Assuming the API uses Bearer token authentication
-            }
-
-            print(ideogram_payload)
-            print(headers)
-
-            ideogram_response = requests.post(ideogram_api_url, json=ideogram_payload, headers=headers)
+            # Run the async functions in a synchronous context
+            flyer_prompt = async_to_sync(generate_flyer_prompt)(event_name, location, organization, description, start_time, end_time)
+            ideogram_response = async_to_sync(generate_ideogram_image)(flyer_prompt)
 
             if ideogram_response.status_code == 200:
                 image_data = ideogram_response.json()
-                # Return the image data or image URL as a JSON response
                 return JsonResponse({'flyer_prompt': flyer_prompt, 'image_data': image_data})
             else:
                 return JsonResponse({'error': 'Failed to generate image with Ideogram API', 'details': ideogram_response.text}, status=500)
@@ -125,7 +136,6 @@ def generate_flyer(request):
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=400)
-
 def start_page(request):
     user = request.user
     if user.is_authenticated:
