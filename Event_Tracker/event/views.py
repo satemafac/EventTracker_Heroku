@@ -33,6 +33,7 @@ from openai import OpenAI
 from asgiref.sync import async_to_sync
 import asyncio
 import httpx
+import logging
 
 
 load_dotenv()
@@ -50,65 +51,83 @@ DEBUG= config('DEBUG')
 
 # Set your OpenAI API key
 
+
+
+# Set up logging
+logger = logging.getLogger(__name__)
+
 # Function to generate the flyer prompt using OpenAI's API asynchronously
 async def generate_flyer_prompt(event_name, location, organization, description, start_time, end_time):
-    prompt = f"""
-    Give me a prompt to generate a beautiful and engaging flyer for this event.
+    try:
+        prompt = f"""
+        Give me a prompt to generate a beautiful and engaging flyer for this event.
 
-    Event Name: {event_name}
-    Location: {location}
-    Organization: {organization}
-    Description: {description}
-    Start Time: {start_time}
-    End Time: {end_time}
+        Event Name: {event_name}
+        Location: {location}
+        Organization: {organization}
+        Description: {description}
+        Start Time: {start_time}
+        End Time: {end_time}
 
-    The flyer should have a modern and elegant design, matching the theme of the event, and should include the provided details in a clear and attractive manner.
-    """
+        The flyer should have a modern and elegant design, matching the theme of the event, and should include the provided details in a clear and attractive manner.
+        """
 
-    openai_api_key = os.getenv('OPEN_AI_KEY')
-    headers = {
-        "Authorization": f"Bearer {openai_api_key}",
-        "Content-Type": "application/json"
-    }
+        openai_api_key = os.getenv('OPEN_AI_KEY')
+        headers = {
+            "Authorization": f"Bearer {openai_api_key}",
+            "Content-Type": "application/json"
+        }
 
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            "https://api.openai.com/v1/chat/completions",
-            json={
-                "model": "gpt-4",
-                "messages": [
-                    {"role": "system", "content": "You are a creative assistant skilled in designing event flyers. Keep the prompts concise and to the point of creating an event flyer with no extra jargons."},
-                    {"role": "user", "content": prompt},
-                ]
-            },
-            headers=headers
-        )
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://api.openai.com/v1/chat/completions",
+                json={
+                    "model": "gpt-4",
+                    "messages": [
+                        {"role": "system", "content": "You are a creative assistant skilled in designing event flyers. Keep the prompts concise and to the point of creating an event flyer with no extra jargons."},
+                        {"role": "user", "content": prompt},
+                    ]
+                },
+                headers=headers
+            )
+        response.raise_for_status()  # This will raise an error for any non-2xx response
 
-    flyer_prompt = response.json()["choices"][0]["message"]["content"].strip()
-    return flyer_prompt
+        flyer_prompt = response.json()["choices"][0]["message"]["content"].strip()
+        return flyer_prompt
+
+    except Exception as e:
+        logger.error(f"Error generating flyer prompt: {str(e)}")
+        raise
 
 # Function to call Ideogram API to generate an image asynchronously
 async def generate_ideogram_image(flyer_prompt):
-    ideogram_api_url = "https://api.ideogram.ai/generate"
-    ideogram_payload = {
-        "image_request": {
-            "model": "V_1",
-            "magic_prompt_option": "AUTO",
-            "prompt": flyer_prompt
+    try:
+        ideogram_api_url = "https://api.ideogram.ai/generate"
+        ideogram_payload = {
+            "image_request": {
+                "model": "V_1",
+                "magic_prompt_option": "AUTO",
+                "prompt": flyer_prompt
+            }
         }
-    }
 
-    ideogram_api_key = os.getenv('IDEOGRAM_AI')
-    headers = {
-        "accept": "application/json",
-        "content-type": "application/json",
-        "Api-Key": ideogram_api_key
-    }
+        ideogram_api_key = os.getenv('IDEOGRAM_AI')
+        headers = {
+            "accept": "application/json",
+            "content-type": "application/json",
+            "Api-Key": ideogram_api_key
+        }
 
-    async with httpx.AsyncClient() as client:
-        ideogram_response = await client.post(ideogram_api_url, json=ideogram_payload, headers=headers)
+        async with httpx.AsyncClient() as client:
+            ideogram_response = await client.post(ideogram_api_url, json=ideogram_payload, headers=headers)
 
-    return ideogram_response
+        ideogram_response.raise_for_status()  # This will raise an error for any non-2xx response
+
+        return ideogram_response
+
+    except Exception as e:
+        logger.error(f"Error generating image with Ideogram API: {str(e)}")
+        raise
 
 @csrf_exempt
 def generate_flyer(request):
@@ -130,9 +149,12 @@ def generate_flyer(request):
                 image_data = ideogram_response.json()
                 return JsonResponse({'flyer_prompt': flyer_prompt, 'image_data': image_data})
             else:
-                return JsonResponse({'error': 'Failed to generate image with Ideogram API', 'details': ideogram_response.text}, status=500)
+                error_message = f"Failed to generate image with Ideogram API. Status code: {ideogram_response.status_code}"
+                logger.error(error_message)
+                return JsonResponse({'error': error_message, 'details': ideogram_response.text}, status=500)
 
         except Exception as e:
+            logger.error(f"Unexpected error: {str(e)}")
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=400)
