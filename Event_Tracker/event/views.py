@@ -104,7 +104,7 @@ def generate_flyer(request):
             ideogram_api_url = "https://api.ideogram.ai/generate"
             ideogram_payload = {
                 "image_request": {
-                    "model": "V_1",  # Replace with the appropriate model as per Ideogram's API docs
+                    "model": "V_2",  # Replace with the appropriate model as per Ideogram's API docs
                     "magic_prompt_option": "AUTO",
                     "prompt": f"{flyer_prompt}"  # Ensure flyer_prompt is correctly added as a string
                 }
