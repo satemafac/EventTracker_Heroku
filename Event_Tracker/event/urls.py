@@ -37,6 +37,8 @@ urlpatterns = [
     re_path(r'^api/attendee/([0-9])$', views.attendee_detail),
     path("", include('social_django.urls')),
     path("logout/",views.logout,name="logout"),
+    path('generate-flyer/', views.generate_flyer, name='generate_flyer'),
+    path('task-status/<str:task_id>/', views.get_task_status, name='task_status'),
     # path("login", views.login_page, name="login-page"),
     # path("signup", views.login_page, name="login-page"),
 ]

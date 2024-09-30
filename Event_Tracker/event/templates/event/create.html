@@ -150,26 +150,15 @@ function getCsrfToken() {
         });
 
         const data = await response.json();
-        
-        // Remove the loading class from the button
-        button.removeClass('loading');
 
-        if (data.image_data && data.image_data.data.length > 0) {
-            const imageUrl = data.image_data.data[0].url;
+        if (data.task_id) {
+            const taskId = data.task_id;
 
-            const imgElement = jQuery('<img />', {
-                src: imageUrl,
-                alt: 'Generated Flyer',
-                class: 'flyer-image'
-            });
-
-            jQuery('#image-gallery').append(imgElement);
-
-            imgElement.click(function () {
-                openModal(imageUrl);
-            });
+            // Start polling for task status
+            pollTaskStatus(taskId, button);
         } else {
-            alert('No image generated.');
+            button.removeClass('loading');
+            alert('Failed to start the flyer generation task.');
         }
 
     } catch (error) {
@@ -177,6 +166,59 @@ function getCsrfToken() {
         console.error('Error generating flyer:', error);
     }
 });
+
+async function pollTaskStatus(taskId, button) {
+    try {
+        const response = await fetch(`/task-status/${taskId}/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken()
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.state === 'PENDING' || data.state === 'PROGRESS') {
+            // Task is still running, poll again after a delay
+            setTimeout(function () {
+                pollTaskStatus(taskId, button);
+            }, 2000); // Poll every 2 seconds
+        } else if (data.state === 'SUCCESS') {
+            // Task completed successfully
+            button.removeClass('loading');
+            const result = data.result;
+            if (result.image_data && result.image_data.data.length > 0) {
+                const imageUrl = result.image_data.data[0].url;
+
+                const imgElement = jQuery('<img />', {
+                    src: imageUrl,
+                    alt: 'Generated Flyer',
+                    class: 'flyer-image'
+                });
+
+                jQuery('#image-gallery').append(imgElement);
+
+                imgElement.click(function () {
+                    openModal(imageUrl);
+                });
+            } else {
+                alert('No image generated.');
+            }
+        } else if (data.state === 'FAILURE') {
+            // Task failed
+            button.removeClass('loading');
+            alert('Failed to generate flyer: ' + data.error);
+        } else {
+            // Unknown state
+            button.removeClass('loading');
+            alert('Unexpected task state: ' + data.state);
+        }
+    } catch (error) {
+        button.removeClass('loading');
+        console.error('Error checking task status:', error);
+    }
+}
 
 /**
  * Function to open the image in a modal for larger view
