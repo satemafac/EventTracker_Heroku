@@ -23,6 +23,7 @@ tomlkit = "*"
 whisper = "*"
 whitenoise = "*"
 openai = "*"
+django-celery-results = "*"
 
 [dev-packages]
 
