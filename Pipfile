@@ -24,6 +24,7 @@ whisper = "*"
 whitenoise = "*"
 openai = "*"
 django-celery-results = "*"
+redis = "*"
 
 [dev-packages]
 

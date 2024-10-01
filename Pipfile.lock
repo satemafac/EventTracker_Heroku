@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8395a4e6c4ba82698a218138daa53be9562c134e019474e788696e9757d5c341"
+            "sha256": "4b150265a1ca2cef44b5592f771536f7ffafcae43d1955cc1b6d106e81832b99"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -47,6 +47,14 @@
             ],
             "markers": "python_version >= '3.8'",
             "version": "==3.8.1"
+        },
+        "async-timeout": {
+            "hashes": [
+                "sha256:4640d96be84d82d02ed59ea2b7105a0f7b33abe8703703cd0ab0bf87c427522f",
+                "sha256:7405140ff1230c310e51dc27b3145b9092d659ce68ff733fb0cefe3ee42be028"
+            ],
+            "markers": "python_full_version < '3.11.3'",
+            "version": "==4.0.3"
         },
         "attrs": {
             "hashes": [
@@ -502,14 +510,6 @@
             ],
             "markers": "python_version >= '3.6'",
             "version": "==3.10"
-        },
-        "importlib-metadata": {
-            "hashes": [
-                "sha256:45e54197d28b7a7f1559e60b95e7c567032b602131fbd588f1497f47880aa68b",
-                "sha256:71522656f0abace1d072b9e5481a48f07c138e00f079c38c8f883823f9c26bd7"
-            ],
-            "markers": "python_version < '3.10'",
-            "version": "==8.5.0"
         },
         "incremental": {
             "hashes": [
@@ -974,6 +974,14 @@
             ],
             "version": "==2024.2"
         },
+        "redis": {
+            "hashes": [
+                "sha256:b756df1e4a3858fcc0ef861f3fc53623a96c41e2b1f5304e09e0fe758d333d40",
+                "sha256:fd4fccba0d7f6aa48c58a78d76ddb4afc698f5da4a2c1d03d916e4fd7ab88cdd"
+            ],
+            "index": "pypi",
+            "version": "==5.1.0"
+        },
         "requests": {
             "hashes": [
                 "sha256:55365417734eb18255590a9ff9eb97e9e1da868d4ccd6402399eaf68af20a760",
@@ -1174,14 +1182,6 @@
             ],
             "index": "pypi",
             "version": "==6.7.0"
-        },
-        "zipp": {
-            "hashes": [
-                "sha256:a817ac80d6cf4b23bf7f2828b7cabf326f15a001bea8b1f9b49631780ba28350",
-                "sha256:bc9eb26f4506fda01b81bcde0ca78103b6e62f991b381fec825435c836edbc29"
-            ],
-            "markers": "python_version >= '3.8'",
-            "version": "==3.20.2"
         },
         "zope-interface": {
             "hashes": [
