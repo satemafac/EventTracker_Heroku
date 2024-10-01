@@ -37,8 +37,12 @@ ALLOWED_HOSTS = ['event.sharetunez.me','127.0.0.1']
 
 
 # Celery settings
-CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
-CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+# CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+# CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+
+CELERY_BROKER_URL = os.environ.get('REDIS_URL')
+CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL')
+
 
 # Optional: configure Celery to use JSON
 CELERY_ACCEPT_CONTENT = ['json']
