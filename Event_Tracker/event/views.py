@@ -1,13 +1,13 @@
-from cgitb import lookup
-from pickle import FALSE
-from pyexpat.errors import messages
+# from cgitb import lookup
+# from pickle import FALSE
+# from pyexpat.errors import messages
 # from turtle import title
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.template import context
-from django.test import client
+# from django.test import client
 from django.urls import reverse
-from flask import request
+# from flask import request
 from django.contrib.auth import logout as django_logout
 from django.http import HttpResponseRedirect
 from decouple import config
@@ -23,9 +23,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
-import whisper
 import json
-import requests
 from django.views.decorators.csrf import csrf_exempt
 from dotenv import load_dotenv
 import os

@@ -56,7 +56,6 @@ CELERY_TIMEZONE = 'UTC'
 
 INSTALLED_APPS = [
     'event',
-    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -72,18 +71,6 @@ INSTALLED_APPS = [
     'frontend.apps.FrontendConfig'
 ]
 
-# Use channels layer as the default backend for `asgi`
-ASGI_APPLICATION = 'Event_Tracker.routing.application'
-
-# Channels settings
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
-}
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
