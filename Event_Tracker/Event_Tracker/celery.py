@@ -1,5 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 import os
+import ssl
 from celery import Celery
 
 # Set the default Django settings module
@@ -17,3 +18,16 @@ app.autodiscover_tasks()
 # Celery settings
 app.conf.broker_url = os.getenv('REDIS_URL')
 app.conf.result_backend = os.getenv('REDIS_URL')
+
+# Add SSL options
+app.conf.broker_transport_options = {
+    'ssl_cert_reqs': ssl.CERT_REQUIRED,
+    # Optional: Specify the path to your CA certificate if needed
+    # 'ssl_ca_certs': '/path/to/ca-certificates.crt',
+}
+
+app.conf.result_transport_options = {
+    'ssl_cert_reqs': ssl.CERT_REQUIRED,
+    # Optional: Specify the path to your CA certificate if needed
+    # 'ssl_ca_certs': '/path/to/ca-certificates.crt',
+}

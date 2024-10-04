@@ -17,6 +17,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 import os
+import ssl
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURE_SSL_REDIRECT = True  # Redirect all HTTP requests to HTTPS
@@ -51,6 +52,17 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 # Optional: set timezone
 CELERY_TIMEZONE = 'UTC'
+
+# Add SSL options
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'ssl_cert_reqs': ssl.CERT_REQUIRED,
+    # 'ssl_ca_certs': '/path/to/ca-certificates.crt',  # Optional
+}
+
+CELERY_RESULT_TRANSPORT_OPTIONS = {
+    'ssl_cert_reqs': ssl.CERT_REQUIRED,
+    # 'ssl_ca_certs': '/path/to/ca-certificates.crt',  # Optional
+}
 
 # Application definition
 
