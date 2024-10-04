@@ -55,13 +55,13 @@ CELERY_TIMEZONE = 'UTC'
 
 # Add SSL options
 CELERY_BROKER_TRANSPORT_OPTIONS = {
-    'ssl_cert_reqs': ssl.CERT_REQUIRED,
-    'ssl_ca_certs': '/etc/ssl/certs/ca-certificates.crt',  # Path to CA certs on Heroku
+    'ssl_cert_reqs': ssl.CERT_NONE,
+    # 'ssl_ca_certs': '/path/to/ca-certificates.crt',  # Optional
 }
 
 CELERY_RESULT_TRANSPORT_OPTIONS = {
-    'ssl_cert_reqs': ssl.CERT_REQUIRED,
-    'ssl_ca_certs': '/etc/ssl/certs/ca-certificates.crt',  # Path to CA certs on Heroku
+    'ssl_cert_reqs': ssl.CERT_NONE,
+    # 'ssl_ca_certs': '/path/to/ca-certificates.crt',  # Optional
 }
 
 # Application definition
