@@ -16,8 +16,8 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 # Celery settings
-app.conf.broker_url = os.getenv('REDIS_URL')
-app.conf.result_backend = os.getenv('REDIS_URL')
+app.conf.broker_url = os.getenv('REDIS_TLS_URL')
+app.conf.result_backend = os.getenv('REDIS_TLS_URL')
 
 # Add SSL options
 app.conf.broker_transport_options = {
