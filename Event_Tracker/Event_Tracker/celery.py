@@ -1,25 +1,28 @@
-from __future__ import absolute_import, unicode_literals
+# celery.py
+
 import os
-import ssl
 from celery import Celery
 
-# Set the default Django settings module for the 'celery' program.
+# Set the default Django settings module for Celery
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Event_Tracker.settings')
 
 app = Celery('Event_Tracker')
 
-# Load task modules from all registered Django app configs.
+# Using a string here means the worker doesn't have to serialize
+# the configuration object to child processes.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
-# Redis URLs for both the broker and backend
-CELERY_BROKER_URL = os.getenv('REDIS_TLS_URL')
-CELERY_RESULT_BACKEND = os.getenv('REDIS_TLS_URL')
+# Load task modules from all registered Django app configs.
+app.autodiscover_tasks()
 
-# Celery SSL configuration for both broker and backend
-ssl_config = {
-    'ssl_cert_reqs': ssl.CERT_NONE  # Change to ssl.CERT_REQUIRED if you need strict SSL checks
-}
+# Retrieve Redis URL from environment
+CELERY_BROKER_URL = os.getenv('REDIS_URL')
+CELERY_RESULT_BACKEND = os.getenv('REDIS_URL')
 
+# Optional: Address Celery deprecation warning
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
+# Update Celery configuration
 app.conf.update(
     broker_url=CELERY_BROKER_URL,
     result_backend=CELERY_RESULT_BACKEND,
@@ -27,11 +30,8 @@ app.conf.update(
     task_serializer='json',
     result_serializer='json',
     timezone='UTC',
-    broker_use_ssl=ssl_config,
-    redis_backend_use_ssl=ssl_config,  # This ensures the backend also uses SSL settings
+    broker_use_ssl=None,  # Remove SSL config if not using TLS
+    redis_backend_use_ssl=None,  # Remove SSL config if not using TLS
+    task_default_queue='celery',
+    task_track_started=True,
 )
-
-# Auto-discover tasks from all registered Django app configs
-app.conf.task_default_queue = 'celery'
-app.conf.task_track_started = True
-app.autodiscover_tasks()
