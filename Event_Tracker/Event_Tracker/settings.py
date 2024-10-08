@@ -64,6 +64,15 @@ ALLOWED_HOSTS = ['event.sharetunez.me','127.0.0.1']
 #     'ssl_ca_certs': '/etc/ssl/certs/ca-certificates.crt',  # Path to CA certs on Heroku
 # }
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [os.getenv('REDIS_TLS_URL')],  # Use REDIS_TLS_URL for secure Redis connections
+        },
+    },
+}
+
 # Application definition
 
 INSTALLED_APPS = [
