@@ -182,7 +182,7 @@ def generate_flyer(request):
             print(f"Task {task.id} sent to queue: {task.queue}")
             return JsonResponse({'task_id': task.id})
         except Exception as e:
-            print(f"Error in generate_flyer view: {e}")
+            print(f"Error in generate_flyer view: {e} {task.queue} ")
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=400)
