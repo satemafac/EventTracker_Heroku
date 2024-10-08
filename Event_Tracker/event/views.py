@@ -35,6 +35,7 @@ from Event_Tracker.tasks import generate_flyer_task
 from celery.result import AsyncResult
 from django.views.decorators.http import require_GET
 import redis
+import ssl
 
 
 
@@ -168,7 +169,12 @@ def generate_flyer(request):
 
             # Redis connection for Celery task queue (using SSL if required)
             try:
-                r = redis.Redis.from_url(CELERY_BROKER_URL, ssl_cert_reqs=None)
+                r = redis.Redis.from_url(
+                    CELERY_BROKER_URL,
+                    ssl=True,
+                    ssl_cert_reqs=ssl.CERT_REQUIRED,
+                    # ssl_ca_certs='/etc/ssl/certs/ca-certificates.crt',  # Optional
+                )
                 r.ping()  # Test Redis connection
                 print('Successfully connected to Redis from Web Dyno')
             except Exception as conn_err:
