@@ -139,8 +139,8 @@ def generate_flyer(request):
     if request.method == 'POST':
         try:
             # Retrieve Celery settings
-            CELERY_BROKER_URL = os.getenv('REDIS_URL')
-            CELERY_RESULT_BACKEND = os.getenv('REDIS_URL')
+            CELERY_BROKER_URL = os.getenv('REDIS_TLS_URL')
+            CELERY_RESULT_BACKEND = os.getenv('REDIS_TLS_URL')
 
             # Print the CELERY_BROKER_URL for debugging
             print(f"CELERY_BROKER_URL: {CELERY_BROKER_URL}")
