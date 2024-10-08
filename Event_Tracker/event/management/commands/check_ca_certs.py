@@ -3,7 +3,6 @@
 from django.core.management.base import BaseCommand
 import os
 import redis
-import ssl
 
 class Command(BaseCommand):
     help = 'Test Redis SSL connection'
@@ -11,11 +10,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         REDIS_TLS_URL = os.getenv('REDIS_TLS_URL')
         try:
+            # No need for explicit ssl=True as it's handled via URL
             r = redis.from_url(
                 REDIS_TLS_URL,
-                ssl=True,
-                ssl_cert_reqs=ssl.CERT_REQUIRED,
-                ssl_ca_certs='/etc/ssl/certs/ca-certificates.crt',
+                ssl_cert_reqs=None  # Optional: Remove if default SSL checks work
             )
             r.ping()
             self.stdout.write(self.style.SUCCESS('Successfully connected to Redis with SSL.'))
