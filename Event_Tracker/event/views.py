@@ -179,6 +179,7 @@ def generate_flyer(request):
             data = json.loads(request.body.decode('utf-8'))
             # Start the Celery task
             task = generate_flyer_task.delay(data)
+            print(f"Task {task.id} sent to queue: {task.queue}")
             return JsonResponse({'task_id': task.id})
         except Exception as e:
             print(f"Error in generate_flyer view: {e}")
