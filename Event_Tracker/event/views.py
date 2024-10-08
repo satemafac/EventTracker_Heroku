@@ -166,9 +166,10 @@ def generate_flyer(request):
             CELERY_BROKER_URL = os.getenv('REDIS_TLS_URL')
             print(f"CELERY_BROKER_URL: {CELERY_BROKER_URL}")
 
-            # Test Redis connection with SSL
+            # Correct Redis connection with SSL
             try:
-                r = redis.Redis.from_url(CELERY_BROKER_URL, ssl=True)
+                # Use ssl_cert_reqs=None for SSL connection without certificate verification
+                r = redis.Redis.from_url(CELERY_BROKER_URL, ssl_cert_reqs=None)
                 r.ping()  # Test the connection
                 print('Successfully connected to Redis from Web Dyno')
             except Exception as conn_err:
