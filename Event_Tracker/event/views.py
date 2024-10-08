@@ -162,27 +162,26 @@ logger = logging.getLogger(__name__)
 def generate_flyer(request):
     if request.method == 'POST':
         try:
-            # Retrieve Redis URL from environment
-            CELERY_BROKER_URL = os.getenv('REDIS_URL')
+            # Retrieve Redis URL for Celery broker
+            CELERY_BROKER_URL = os.getenv('REDIS_TLS_URL')
             print(f"CELERY_BROKER_URL: {CELERY_BROKER_URL}")
 
-            # Correct Redis connection with SSL
+            # Redis connection for Celery task queue (using SSL if required)
             try:
-                # Use ssl_cert_reqs=None for SSL connection without certificate verification
-                r = redis.Redis.from_url(CELERY_BROKER_URL)
-                r.ping()  # Test the connection
+                r = redis.Redis.from_url(CELERY_BROKER_URL, ssl_cert_reqs=None)
+                r.ping()  # Test Redis connection
                 print('Successfully connected to Redis from Web Dyno')
             except Exception as conn_err:
                 print(f"Connection to Redis failed in Web Dyno: {conn_err}")
                 return JsonResponse({'error': str(conn_err)}, status=500)
 
+            # Extract data and send Celery task
             data = json.loads(request.body.decode('utf-8'))
-            # Start the Celery task
             task = generate_flyer_task.delay(data)
-            print(f"Task {task.id} sent to queue: {task.queue}")
+            print(f"Task {task.id} sent to queue")
             return JsonResponse({'task_id': task.id})
         except Exception as e:
-            print(f"Error in generate_flyer view: {e} ")
+            print(f"Error in generate_flyer view: {e}")
             return JsonResponse({'error': str(e)}, status=500)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=400)

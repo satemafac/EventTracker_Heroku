@@ -41,38 +41,50 @@ ALLOWED_HOSTS = ['event.sharetunez.me','127.0.0.1']
 # CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
 # CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', 'redis://localhost:6379')
 
-# CELERY_BROKER_URL = os.getenv('REDIS_TLS_URL')
+CELERY_BROKER_URL = os.getenv('REDIS_TLS_URL')
 # CELERY_RESULT_BACKEND = os.getenv('REDIS_TLS_URL')
 
 
-# # Optional: configure Celery to use JSON
-# CELERY_ACCEPT_CONTENT = ['json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
+# Optional: configure Celery to use JSON
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 
-# # Optional: set timezone
-# CELERY_TIMEZONE = 'UTC'
 
-# Add SSL options
-# CELERY_BROKER_TRANSPORT_OPTIONS = {
-#     'ssl_cert_reqs': ssl.CERT_REQUIRED,
-#     'ssl_ca_certs': '/etc/ssl/certs/ca-certificates.crt',  # Path to CA certs on Heroku
-# }
+# Optional: set timezone
+CELERY_TIMEZONE = 'UTC'
+
+# # Add SSL options
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'ssl_cert_reqs': ssl.CERT_REQUIRED,  # Enforces SSL certificate validation
+}
 
 # CELERY_RESULT_TRANSPORT_OPTIONS = {
 #     'ssl_cert_reqs': ssl.CERT_REQUIRED,
-#     'ssl_ca_certs': '/etc/ssl/certs/ca-certificates.crt',  # Path to CA certs on Heroku
 # }
 
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [os.getenv('REDIS_URL')],  # Use REDIS_TLS_URL for secure Redis connections
+            "hosts": [os.getenv('REDIS_TLS_URL')],
+            "ssl_cert_reqs": ssl.CERT_REQUIRED,
         },
     },
 }
 
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": os.environ.get('REDIS_TLS_URL'),
+        "OPTIONS": {
+            "ssl_cert_reqs": ssl.CERT_REQUIRED,
+        }
+    }
+}
 # Application definition
 
 INSTALLED_APPS = [
@@ -89,6 +101,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'qr_code',
     'django_celery_results',
+    'django_celery_beat',
     'frontend.apps.FrontendConfig'
 ]
 
