@@ -41,28 +41,28 @@ ALLOWED_HOSTS = ['event.sharetunez.me','127.0.0.1']
 # CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
 # CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', 'redis://localhost:6379')
 
-CELERY_BROKER_URL = os.getenv('REDIS_TLS_URL')
-CELERY_RESULT_BACKEND = os.getenv('REDIS_TLS_URL')
+# CELERY_BROKER_URL = os.getenv('REDIS_TLS_URL')
+# CELERY_RESULT_BACKEND = os.getenv('REDIS_TLS_URL')
 
 
-# Optional: configure Celery to use JSON
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+# # Optional: configure Celery to use JSON
+# CELERY_ACCEPT_CONTENT = ['json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
 
-# Optional: set timezone
-CELERY_TIMEZONE = 'UTC'
+# # Optional: set timezone
+# CELERY_TIMEZONE = 'UTC'
 
 # Add SSL options
-CELERY_BROKER_TRANSPORT_OPTIONS = {
-    'ssl_cert_reqs': ssl.CERT_REQUIRED,
-    'ssl_ca_certs': '/etc/ssl/certs/ca-certificates.crt',  # Path to CA certs on Heroku
-}
+# CELERY_BROKER_TRANSPORT_OPTIONS = {
+#     'ssl_cert_reqs': ssl.CERT_REQUIRED,
+#     'ssl_ca_certs': '/etc/ssl/certs/ca-certificates.crt',  # Path to CA certs on Heroku
+# }
 
-CELERY_RESULT_TRANSPORT_OPTIONS = {
-    'ssl_cert_reqs': ssl.CERT_REQUIRED,
-    'ssl_ca_certs': '/etc/ssl/certs/ca-certificates.crt',  # Path to CA certs on Heroku
-}
+# CELERY_RESULT_TRANSPORT_OPTIONS = {
+#     'ssl_cert_reqs': ssl.CERT_REQUIRED,
+#     'ssl_ca_certs': '/etc/ssl/certs/ca-certificates.crt',  # Path to CA certs on Heroku
+# }
 
 # Application definition
 
