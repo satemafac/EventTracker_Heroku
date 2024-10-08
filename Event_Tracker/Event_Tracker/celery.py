@@ -32,4 +32,5 @@ app.conf.update(
 )
 
 # Auto-discover tasks from all registered Django app configs
+app.conf.task_default_queue = 'celery'
 app.autodiscover_tasks()
