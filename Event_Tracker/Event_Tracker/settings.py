@@ -55,16 +55,13 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
 
 # SSL Options for the Broker
-BROKER_USE_SSL = {
-    'ssl_cert_reqs': ssl.CERT_REQUIRED,
-    # 'ssl_ca_certs': '/etc/ssl/certs/ca-certificates.crt',  # Optional: specify CA certificates
+CELERY_BROKER_USE_SSL = {
+    'ssl_cert_reqs': ssl.CERT_NONE,  # Disable certificate verification
 }
 
-# Note: 'redis_backend_use_ssl' is not prefixed with 'CELERY_'
 # SSL Options for the Result Backend
-redis_backend_use_ssl = {
-    'ssl_cert_reqs': ssl.CERT_REQUIRED,
-    # 'ssl_ca_certs': '/etc/ssl/certs/ca-certificates.crt',  # Optional: specify CA certificates
+CELERY_REDIS_BACKEND_USE_SSL = {
+    'ssl_cert_reqs': ssl.CERT_NONE,  # Disable certificate verification
 }
 
 # # Add SSL options
