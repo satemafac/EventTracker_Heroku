@@ -1,14 +1,23 @@
-# check_ca_certs.py
+# test_redis_ssl.py
 
 from django.core.management.base import BaseCommand
 import os
+import redis
+import ssl
 
 class Command(BaseCommand):
-    help = 'Check if CA certificates file exists'
+    help = 'Test Redis SSL connection'
 
     def handle(self, *args, **options):
-        ca_certs_path = '/etc/ssl/certs/ca-certificates.crt'
-        if os.path.exists(ca_certs_path):
-            self.stdout.write(self.style.SUCCESS(f'CA certificates found at {ca_certs_path}'))
-        else:
-            self.stdout.write(self.style.ERROR(f'CA certificates NOT found at {ca_certs_path}'))
+        REDIS_TLS_URL = os.getenv('REDIS_TLS_URL')
+        try:
+            r = redis.from_url(
+                REDIS_TLS_URL,
+                ssl=True,
+                ssl_cert_reqs=ssl.CERT_REQUIRED,
+                ssl_ca_certs='/etc/ssl/certs/ca-certificates.crt',
+            )
+            r.ping()
+            self.stdout.write(self.style.SUCCESS('Successfully connected to Redis with SSL.'))
+        except Exception as e:
+            self.stdout.write(self.style.ERROR(f'Failed to connect to Redis: {e}'))
