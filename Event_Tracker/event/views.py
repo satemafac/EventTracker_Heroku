@@ -135,23 +135,49 @@ logger = logging.getLogger(__name__)
 #     else:
 #         return JsonResponse({'error': 'Invalid request method'}, status=400)
 
+# def generate_flyer(request):
+#     if request.method == 'POST':
+#         try:
+#             # Retrieve Celery settings
+#             CELERY_BROKER_URL = os.getenv('REDIS_TLS_URL')
+#             CELERY_RESULT_BACKEND = os.getenv('REDIS_TLS_URL')
+
+#             # Print the CELERY_BROKER_URL for debugging
+#             print(f"CELERY_BROKER_URL: {CELERY_BROKER_URL}")
+
+#             data = json.loads(request.body.decode('utf-8'))
+#             # Start the Celery task
+#             task = generate_flyer_task.delay(data)
+#             # Return the task ID to the client
+#             return JsonResponse({'task_id': task.id})
+#         except Exception as e:
+#             # Print the exception for debugging
+#             print(f"Error in generate_flyer view: {e}")
+#             return JsonResponse({'error': str(e)}, status=500)
+#     else:
+#         return JsonResponse({'error': 'Invalid request method'}, status=400)
+
 def generate_flyer(request):
     if request.method == 'POST':
         try:
-            # Retrieve Celery settings
+            # Retrieve Redis URL from environment
             CELERY_BROKER_URL = os.getenv('REDIS_TLS_URL')
-            CELERY_RESULT_BACKEND = os.getenv('REDIS_TLS_URL')
-
-            # Print the CELERY_BROKER_URL for debugging
             print(f"CELERY_BROKER_URL: {CELERY_BROKER_URL}")
+
+            # Test Redis connection with SSL
+            try:
+                r = redis.Redis.from_url(CELERY_BROKER_URL, ssl=True)
+                r.ping()  # Test the connection
+                print('Successfully connected to Redis from Web Dyno')
+            except Exception as conn_err:
+                print(f"Connection to Redis failed in Web Dyno: {conn_err}")
+                return JsonResponse({'error': str(conn_err)}, status=500)
 
             data = json.loads(request.body.decode('utf-8'))
             # Start the Celery task
             task = generate_flyer_task.delay(data)
-            # Return the task ID to the client
             return JsonResponse({'task_id': task.id})
         except Exception as e:
-            # Print the exception for debugging
             print(f"Error in generate_flyer view: {e}")
             return JsonResponse({'error': str(e)}, status=500)
     else:
