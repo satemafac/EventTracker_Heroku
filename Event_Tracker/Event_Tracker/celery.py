@@ -14,20 +14,3 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
-
-# # Celery settings
-# app.conf.broker_url = os.getenv('REDIS_TLS_URL')
-# app.conf.result_backend = os.getenv('REDIS_TLS_URL')
-
-# # Add SSL options
-# app.conf.broker_transport_options = {
-#     'ssl_cert_reqs': ssl.CERT_REQUIRED,
-#     # Optional: Specify the path to your CA certificate if needed
-#     # 'ssl_ca_certs': '/path/to/ca-certificates.crt',
-# }
-
-# app.conf.result_transport_options = {
-#     'ssl_cert_reqs': ssl.CERT_REQUIRED,
-#     # Optional: Specify the path to your CA certificate if needed
-#     # 'ssl_ca_certs': '/path/to/ca-certificates.crt',
-# }
