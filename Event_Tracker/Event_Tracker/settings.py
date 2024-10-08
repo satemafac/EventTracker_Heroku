@@ -57,6 +57,7 @@ CELERY_TIMEZONE = 'UTC'
 # # Add SSL options
 CELERY_BROKER_TRANSPORT_OPTIONS = {
     'ssl_cert_reqs': ssl.CERT_REQUIRED,  # Enforces SSL certificate validation
+    'ssl_ca_certs': '/etc/ssl/certs/ca-certificates.crt',
 }
 
 # CELERY_RESULT_TRANSPORT_OPTIONS = {
