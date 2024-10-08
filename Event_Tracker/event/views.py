@@ -171,9 +171,8 @@ def generate_flyer(request):
             try:
                 r = redis.Redis.from_url(
                     CELERY_BROKER_URL,
-                    ssl=True,
                     ssl_cert_reqs=ssl.CERT_REQUIRED,
-                    # ssl_ca_certs='/etc/ssl/certs/ca-certificates.crt',  # Optional
+                    ssl_ca_certs='/etc/ssl/certs/ca-certificates.crt',  # Optional
                 )
                 r.ping()  # Test Redis connection
                 print('Successfully connected to Redis from Web Dyno')
