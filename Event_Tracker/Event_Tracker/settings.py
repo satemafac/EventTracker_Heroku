@@ -50,8 +50,6 @@ CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
-
 
 # Optional: set timezone
 CELERY_TIMEZONE = 'UTC'
@@ -101,7 +99,6 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'qr_code',
     'django_celery_results',
-    'django_celery_beat',
     'frontend.apps.FrontendConfig'
 ]
 
