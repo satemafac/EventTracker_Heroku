@@ -34,6 +34,8 @@ from django.http import JsonResponse
 from Event_Tracker.tasks import generate_flyer_task
 from celery.result import AsyncResult
 from django.views.decorators.http import require_GET
+import redis
+
 
 
 load_dotenv()
