@@ -68,7 +68,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [os.getenv('REDIS_TLS_URL')],  # Use REDIS_TLS_URL for secure Redis connections
+            "hosts": [os.getenv('REDIS_URL')],  # Use REDIS_TLS_URL for secure Redis connections
         },
     },
 }
