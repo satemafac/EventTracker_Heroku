@@ -163,7 +163,7 @@ def generate_flyer(request):
     if request.method == 'POST':
         try:
             # Retrieve Redis URL from environment
-            CELERY_BROKER_URL = os.getenv('REDIS_TLS_URL')
+            CELERY_BROKER_URL = os.getenv('REDIS_URL')
             print(f"CELERY_BROKER_URL: {CELERY_BROKER_URL}")
 
             # Correct Redis connection with SSL
