@@ -69,6 +69,7 @@ CHANNEL_LAYERS = {
         'CONFIG': {
             "hosts": [os.getenv('REDIS_TLS_URL')],
             "ssl_cert_reqs": ssl.CERT_REQUIRED,
+            'ssl_ca_certs': '/etc/ssl/certs/ca-certificates.crt',
         },
     },
 }
@@ -80,6 +81,7 @@ CACHES = {
         "LOCATION": os.environ.get('REDIS_TLS_URL'),
         "OPTIONS": {
             "ssl_cert_reqs": ssl.CERT_REQUIRED,
+            'ssl_ca_certs': '/etc/ssl/certs/ca-certificates.crt',
         }
     }
 }
