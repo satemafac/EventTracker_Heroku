@@ -3,10 +3,10 @@ import os
 import ssl
 from celery import Celery
 
-# Set the default Django settings module for the 'celery' program
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'your_project.settings')
+# Set the default Django settings module
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Event_Tracker.settings')
 
-app = Celery('your_project')
+app = Celery('Event_Tracker')
 
 # Using a string here means the worker doesn't need to serialize
 # the configuration object to child processes.
