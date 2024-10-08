@@ -3,19 +3,22 @@ import os
 import ssl
 from celery import Celery
 
-# Set the default Django settings module
+# Set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Event_Tracker.settings')
 
 app = Celery('Event_Tracker')
 
-# Using a string here means the worker doesn't need to serialize
-# the configuration object to child processes.
-# Load configuration from Django settings
+# Load task modules from all registered Django app configs.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
-# Enable Redis as the broker and result backend
+# Redis URLs for both the broker and backend
 CELERY_BROKER_URL = os.getenv('REDIS_TLS_URL')
 CELERY_RESULT_BACKEND = os.getenv('REDIS_TLS_URL')
+
+# Celery SSL configuration for both broker and backend
+ssl_config = {
+    'ssl_cert_reqs': ssl.CERT_NONE  # Change to ssl.CERT_REQUIRED if you need strict SSL checks
+}
 
 app.conf.update(
     broker_url=CELERY_BROKER_URL,
@@ -24,9 +27,8 @@ app.conf.update(
     task_serializer='json',
     result_serializer='json',
     timezone='UTC',
-    broker_use_ssl={
-        'ssl_cert_reqs': ssl.CERT_NONE  # You can adjust to CERT_REQUIRED if needed
-    }
+    broker_use_ssl=ssl_config,
+    redis_backend_use_ssl=ssl_config,  # This ensures the backend also uses SSL settings
 )
 
 # Auto-discover tasks from all registered Django app configs
