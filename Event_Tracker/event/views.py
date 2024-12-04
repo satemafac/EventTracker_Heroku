@@ -160,6 +160,7 @@ logger = logging.getLogger(__name__)
 #     else:
 #         return JsonResponse({'error': 'Invalid request method'}, status=400)
 
+@csrf_exempt
 def generate_flyer(request):
     if request.method == 'POST':
         try:
